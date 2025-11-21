@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>RAG E-commerce Support Assistant</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f5f5f5;
+        margin: 0;
+        padding: 0;
+      }
+      header {
+        background: #1e88e5;
+        color: white;
+        padding: 16px 24px;
+      }
+      header h1 {
+        margin: 0;
+        font-size: 22px;
+      }
+      main {
+        max-width: 900px;
+        margin: 24px auto;
+        padding: 16px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+      h2 {
+        margin-top: 24px;
+        font-size: 18px;
+        color: #333;
+      }
+      label {
+        display: block;
+        margin-bottom: 4px;
+        font-weight: bold;
+      }
+      input[type="text"],
+      textarea {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 12px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        box-sizing: border-box;
+      }
+      textarea {
+        resize: vertical;
+        min-height: 70px;
+      }
+      button {
+        background: #1e88e5;
+        border: none;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 4px;
+        font-size: 14px;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #1565c0;
+      }
+      .section {
+        border-bottom: 1px solid #eee;
+        padding-bottom: 16px;
+        margin-bottom: 24px;
+      }
+      .response-box {
+        background: #f0f4ff;
+        border-radius: 4px;
+        padding: 8px 10px;
+        white-space: pre-wrap;
+        font-size: 14px;
+        border: 1px solid #c5cae9;
+      }
+      .small {
+        font-size: 12px;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>RAG E-commerce Support Assistant (Offline Demo)</h1>
+    </header>
+
+    <main>
+      <section class="section">
+        <h2>1. Ask about Products / Policies (/ask)</h2>
+        <label for="question">Question</label>
+        <textarea
+          id="question"
+          placeholder="Example: What is your return policy for electronics?"
+        ></textarea>
+        <button onclick="ask()">Ask</button>
+        <div id="ask-response" class="response-box" style="margin-top: 10px"></div>
+      </section>
+
+      <section class="section">
+        <h2>2. Check Order Status (/order-status)</h2>
+        <label for="orderIdStatus">Order ID</label>
+        <input
+          type="text"
+          id="orderIdStatus"
+          placeholder="Example: ORD123"
+        />
+        <button onclick="checkStatus()">Check Status</button>
+        <div
+          id="status-response"
+          class="response-box"
+          style="margin-top: 10px"
+        ></div>
+      </section>
+
+      <section class="section">
+        <h2>3. Check Return Eligibility (/can-return)</h2>
+        <label for="orderIdReturn">Order ID</label>
+        <input
+          type="text"
+          id="orderIdReturn"
+          placeholder="Example: ORD123"
+        />
+        <button onclick="checkReturn()">Check Return</button>
+        <div
+          id="return-response"
+          class="response-box"
+          style="margin-top: 10px"
+        ></div>
+      </section>
+
+      <p class="small">
+        Backend running at <code>http://localhost:4000</code>. This demo uses
+        offline RAG (keyword-based search) instead of OpenAI due to quota
+        limits.
+      </p>
+    </main>
+
+    <script>
+      const BASE_URL = "http://localhost:4000";
+
+      async function ask() {
+        const question = document.getElementById("question").value.trim();
+        const out = document.getElementById("ask-response");
+        out.textContent = "Loading...";
+
+        if (!question) {
+          out.textContent = "Please enter a question.";
+          return;
+        }
+
+        try {
+          const res = await fetch(BASE_URL + "/ask", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ question })
+          });
+
+          const data = await res.json();
+          if (data.error) {
+            out.textContent = "Error: " + data.error;
+          } else {
+            out.textContent = data.answer;
+          }
+        } catch (err) {
+          out.textContent = "Request failed: " + err.message;
+        }
+      }
+
+      async function checkStatus() {
+        const orderId = document
+          .getElementById("orderIdStatus")
+          .value.trim();
+        const out = document.getElementById("status-response");
+        out.textContent = "Loading...";
+
+        if (!orderId) {
+          out.textContent = "Please enter an Order ID.";
+          return;
+        }
+
+        try {
+          const res = await fetch(BASE_URL + "/order-status", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ orderId })
+          });
+
+          const data = await res.json();
+          if (data.error) {
+            out.textContent = "Error: " + data.error;
+          } else {
+            out.textContent =
+              data.message +
+              "\n\nRaw order data:\n" +
+              JSON.stringify(data.order, null, 2);
+          }
+        } catch (err) {
+          out.textContent = "Request failed: " + err.message;
+        }
+      }
+
+      async function checkReturn() {
+        const orderId = document
+          .getElementById("orderIdReturn")
+          .value.trim();
+        const out = document.getElementById("return-response");
+        out.textContent = "Loading...";
+
+        if (!orderId) {
+          out.textContent = "Please enter an Order ID.";
+          return;
+        }
+
+        try {
+          const res = await fetch(BASE_URL + "/can-return", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ orderId })
+          });
+
+          const data = await res.json();
+          if (data.error) {
+            out.textContent = "Error: " + data.error;
+          } else {
+            out.textContent = data.message;
+          }
+        } catch (err) {
+          out.textContent = "Request failed: " + err.message;
+        }
+      }
+    </script>
+  </body>
+</html>

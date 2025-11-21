@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "name": "Wireless Mouse",
+    "description": "2.4 GHz wireless mouse with ergonomic design and 1600 DPI.",
+    "category": "Electronics",
+    "price": 799
+  },
+  {
+    "id": 2,
+    "name": "Bluetooth Headphones",
+    "description": "Over-ear Bluetooth headphones with noise cancellation.",
+    "category": "Electronics",
+    "price": 2499
+  }
+]
+

@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "title": "Return Policy",
+    "text": "Customers can return eligible items within 30 days of delivery. Items must be unused and in original packaging."
+  },
+  {
+    "id": 2,
+    "title": "Replacement Policy",
+    "text": "If the product is damaged or defective, customers can request a free replacement within 7 days of delivery."
+  },
+  {
+    "id": 3,
+    "title": "Refund Policy",
+    "text": "Refunds are processed to the original payment method within 5–7 business days after the returned item is received and inspected."
+  }
+]

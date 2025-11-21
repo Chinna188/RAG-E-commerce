@@ -1,0 +1,26 @@
+[
+  {
+    "orderId": "ORD123",
+    "userName": "Gireesh Reddyvari",
+    "status": "Shipped",
+    "carrier": "BlueDart",
+    "trackingNo": "BD123456789IN",
+    "fromLocation": "Bengaluru warehouse",
+    "expectedDelivery": "2025-11-22",
+    "orderDate": "2025-11-15",
+    "canReturnTill": "2025-11-25",
+    "items": ["P1001"]
+  },
+  {
+    "orderId": "ORD124",
+    "userName": "Gireesh Reddyvari",
+    "status": "Delivered",
+    "carrier": "Delhivery",
+    "trackingNo": "DLV987654321IN",
+    "fromLocation": "Mumbai warehouse",
+    "expectedDelivery": "2025-11-18",
+    "orderDate": "2025-11-10",
+    "canReturnTill": "2025-11-20",
+    "items": ["P1002"]
+  }
+]
